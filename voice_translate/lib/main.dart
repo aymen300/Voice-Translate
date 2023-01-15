@@ -2,7 +2,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:voice_translate/pages/fggg.dart';
+
 import 'package:voice_translate/pages/register_page.dart';
 import 'package:voice_translate/pages/translator_page.dart';
 import 'package:voice_translate/pages/verify_page.dart';

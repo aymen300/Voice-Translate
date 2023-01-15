@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:voice_translate/service/database.dart';
-import 'package:voice_translate/widgets/alert_box.dart';
+
 
 Future<String> signIn(String email, String password) async {
   try {
