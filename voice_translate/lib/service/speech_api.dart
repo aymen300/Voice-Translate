@@ -55,6 +55,13 @@ class SpeechApi {
           localeId: locales[arabic].localeId,
         );
       }
+      if (selectedLanguage == "Detect") {
+        
+        _speech.listen(
+          onResult: (value) => onResult(value.recognizedWords),
+          
+        );
+      }
       
     }
 

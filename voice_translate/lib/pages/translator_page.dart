@@ -31,10 +31,11 @@ class TranslatorPage extends StatefulWidget {
 
 class _TranslatorPageState extends State<TranslatorPage> {
   final translator = GoogleTranslator();
-  List<String> languages = ["English", "French", "Arabic"];
-  List<String> codes = ["en", "fr", "ar"];
-  late String dropDownValueFrom = languages[0];
-  late String dropDownValueTo = languages[1];
+  List<String> languagesFrom = ["Detect", "English", "French", "Arabic"];
+  List<String> languagesTo = ["English", "French", "Arabic"];
+  List<String> codes = ["auto", "en", "fr", "ar"];
+  late String dropDownValueFrom = languagesFrom[0];
+  late String dropDownValueTo = languagesTo[1];
   TextEditingController textToTranslate = TextEditingController();
   TextEditingController TranslatedText = TextEditingController();
   bool isListening = false;
@@ -66,8 +67,8 @@ class _TranslatorPageState extends State<TranslatorPage> {
       if (textToTranslate.text.isNotEmpty) {
         translator
             .translate(textToTranslate.text,
-                from: codes[languages.indexOf(dropDownValueFrom)],
-                to: codes[languages.indexOf(dropDownValueTo)])
+                from: codes[languagesFrom.indexOf(dropDownValueFrom)],
+                to: codes[languagesTo.indexOf(dropDownValueTo) + 1])
             .then((tr) {
           setState(() {
             TranslatedText.text = tr.text;
@@ -149,7 +150,7 @@ class _TranslatorPageState extends State<TranslatorPage> {
                       ),
                       iconOnClick: const Icon(Icons.keyboard_arrow_up,
                           color: Color.fromARGB(255, 89, 86, 233)),
-                      items: languages.map((String items) {
+                      items: languagesFrom.map((String items) {
                         return DropdownMenuItem(
                           value: items,
                           child: Text(items),
@@ -167,20 +168,22 @@ class _TranslatorPageState extends State<TranslatorPage> {
                           TranslatorPage.selectedLanguage = dropDownValueFrom;
                           if (textToTranslate.text != "") {
                             translator
-                              .translate(textToTranslate.text,
-                                  from: codes[
-                                      languages.indexOf(dropDownValueFrom)],
-                                  to: codes[languages.indexOf(dropDownValueTo)])
-                              .then((tr) {
-                            setState(() {
-                              TranslatedText.text = tr.text;
-                            });
-                            /*if (textToTranslate.text.isEmpty) {
+                                .translate(textToTranslate.text,
+                                    from: codes[languagesFrom
+                                        .indexOf(dropDownValueFrom)],
+                                    to: codes[
+                                        languagesTo.indexOf(dropDownValueTo) +
+                                            1])
+                                .then((tr) {
+                              setState(() {
+                                TranslatedText.text = tr.text;
+                              });
+                              /*if (textToTranslate.text.isEmpty) {
                                   setState(() {
                                     TranslatedText.text = "";
                                   });
                                 }*/
-                          });
+                            });
                           }
                         });
                       },
@@ -192,28 +195,32 @@ class _TranslatorPageState extends State<TranslatorPage> {
                         foregroundColor: Colors.white,
                         onPressed: () {
                           setState(() {
-                            String aux = dropDownValueFrom;
-                            dropDownValueFrom = dropDownValueTo;
-                            dropDownValueTo = aux;
-                            TranslatorPage.selectedLanguage = dropDownValueFrom;
-                            if (TranslatedText.text.isNotEmpty) {
-                              textToTranslate.text = TranslatedText.text;
-                              translator
-                                  .translate(textToTranslate.text,
-                                      from: codes[
-                                          languages.indexOf(dropDownValueFrom)],
-                                      to: codes[
-                                          languages.indexOf(dropDownValueTo)])
-                                  .then((tr) {
-                                setState(() {
-                                  TranslatedText.text = tr.text;
-                                });
-                                /*if (textToTranslate.text.isEmpty) {
+                            if (dropDownValueFrom != "Detect") {
+                              String aux = dropDownValueFrom;
+                              dropDownValueFrom = dropDownValueTo;
+                              dropDownValueTo = aux;
+                              TranslatorPage.selectedLanguage =
+                                  dropDownValueFrom;
+                              if (TranslatedText.text.isNotEmpty) {
+                                textToTranslate.text = TranslatedText.text;
+                                translator
+                                    .translate(textToTranslate.text,
+                                        from: codes[languagesFrom
+                                            .indexOf(dropDownValueFrom)],
+                                        to: codes[languagesTo
+                                                .indexOf(dropDownValueTo) +
+                                            1])
+                                    .then((tr) {
+                                  setState(() {
+                                    TranslatedText.text = tr.text;
+                                  });
+                                  /*if (textToTranslate.text.isEmpty) {
                                   setState(() {
                                     TranslatedText.text = "";
                                   });
                                 }*/
-                              });
+                                });
+                              }
                             }
                           });
                         },
@@ -244,7 +251,7 @@ class _TranslatorPageState extends State<TranslatorPage> {
                       value: dropDownValueTo,
                       icon: const Icon(Icons.keyboard_arrow_down),
                       iconOnClick: const Icon(Icons.keyboard_arrow_up),
-                      items: languages.map((String items) {
+                      items: languagesTo.map((String items) {
                         return DropdownMenuItem(
                           value: items,
                           child: Text(items),
@@ -263,9 +270,9 @@ class _TranslatorPageState extends State<TranslatorPage> {
                             translator
                                 .translate(textToTranslate.text,
                                     from: codes[
-                                        languages.indexOf(dropDownValueFrom)],
+                                        languagesFrom.indexOf(dropDownValueFrom)],
                                     to: codes[
-                                        languages.indexOf(dropDownValueTo)])
+                                        languagesTo.indexOf(dropDownValueTo)+1])
                                 .then((tr) {
                               setState(() {
                                 TranslatedText.text = tr.text;
@@ -329,8 +336,8 @@ class _TranslatorPageState extends State<TranslatorPage> {
                         translator
                             .translate(textToTranslate.text,
                                 from:
-                                    codes[languages.indexOf(dropDownValueFrom)],
-                                to: codes[languages.indexOf(dropDownValueTo)])
+                                    codes[languagesFrom.indexOf(dropDownValueFrom)],
+                                to: codes[languagesTo.indexOf(dropDownValueTo)+1])
                             .then((tr) {
                           setState(() {
                             TranslatedText.text = tr.text;
@@ -464,7 +471,7 @@ class _TranslatorPageState extends State<TranslatorPage> {
                       onPressed: () {
                         if (TranslatedText.text.isNotEmpty) {
                           TextToSpeechApi().speak(TranslatedText.text,
-                              codes[languages.indexOf(dropDownValueTo)]);
+                              codes[languagesTo.indexOf(dropDownValueTo)+1]);
                         }
                       },
                     ),
@@ -526,8 +533,8 @@ class _TranslatorPageState extends State<TranslatorPage> {
           if (textToTranslate.text.isNotEmpty) {
             translator
                 .translate(textToTranslate.text,
-                    from: codes[languages.indexOf(dropDownValueFrom)],
-                    to: codes[languages.indexOf(dropDownValueTo)])
+                    from: codes[languagesFrom.indexOf(dropDownValueFrom)],
+                    to: codes[languagesTo.indexOf(dropDownValueTo)+1])
                 .then((tr) {
               setState(() {
                 TranslatedText.text = tr.text;
